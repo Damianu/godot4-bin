@@ -48,10 +48,14 @@ godotBin.overrideAttrs (
     installPhase = ''
       mkdir -p $out/bin $out/opt/godot-mono
 
+
       install -m 0755 source/${godotName} $out/opt/godot-mono/${godotName}
       cp -r source/GodotSharp $out/opt/godot-mono
 
       ln -s $out/opt/godot-mono/${godotName} $out/bin/godot-mono
+
+      # Ensure that the dotnet package survives garbage collection
+      echo "${dotnetPackage}" >> $out/bin/runtime-deps.txt
 
       # Only create a desktop file, if the necessary variables are set
       # these are set only, if one installs this program using flakes.
