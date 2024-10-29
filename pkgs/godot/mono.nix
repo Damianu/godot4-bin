@@ -8,6 +8,7 @@
   godotIconPNG,
   godotIconSVG,
   godotManpage,
+  dotnetPackage,
   version ? "4.3-stable",
   versionHash ? "sha256-7N881aYASmVowZlYHVi6aFqZBZJuUWd5BrdvvdnK01E=",
   arch ? "linux.x86_64",
@@ -30,6 +31,7 @@ godotBin.overrideAttrs (
     buildInputs = oldAttrs.buildInputs ++ [
       zlib
       msbuild
+      dotnetPackage
     ];
 
     libraries = lib.makeLibraryPath buildInputs;
