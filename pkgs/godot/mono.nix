@@ -31,6 +31,7 @@ in rec {
     ++ [
       zlib
       msbuild
+      dotnetPackage
     ];
 
   libraries = lib.makeLibraryPath buildInputs;
@@ -67,15 +68,17 @@ in rec {
     fi
   '';
 
-  postFixup =
-    if setDotnetRoot
-    then ''
+  postFixup = let
+    commonPart = ''
       wrapProgram $out/bin/godot-mono \
         --set LD_LIBRARY_PATH ${libraries} \
-        --set DOTNET_ROOT ${dotnetPackage}
-    ''
-    else ''
-      wrapProgram $out/bin/godot-mono
-        --set LD_LIBRARY_PATH ${libraries}
     '';
+    dotnetPart = ''
+      --set DOTNET_ROOT ${dotnetPackage} \
+      --set PATH "${dotnetPackage}:$PATH" \
+    '';
+  in
+    if setDotnetRoot
+    then commonPart + dotnetPart
+    else commonPart;
 })
